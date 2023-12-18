@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 from .DiffusionModel import pipe_image_to_image, pipe_text_to_image
 
 
-def create_from_text(prompt, negative_prompt,  guidance_scale,num_inference_steps=5):
+def create_from_text(prompt, negative_prompt,  guidance_scale, num_inference_steps=5):
     image = pipe_text_to_image(prompt, num_inference_steps=5).images[0] 
     image_prompt = prompt.replace(' ', '_')
     image_location = f"created/model/TTI/{image_prompt}.png"
