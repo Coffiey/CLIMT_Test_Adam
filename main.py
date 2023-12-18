@@ -1,7 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-
-from functions import create_from_text, create_from_image,create_from_text_with_lora
+from AIModel.DiffusionFunctions import create_from_image, create_from_text, create_from_text_with_lora, create_from_image_with_lora
 
 
 app = FastAPI()
@@ -13,8 +12,8 @@ def index():
 @app.get("/model/text-to-image/{prompt}")
 def index(prompt):
     image_prompt = prompt.replace("_"," ")
-    create_from_text(image_prompt)
-    return {"message" : "hello dave"}
+    response = create_from_text(image_prompt)
+    return {"message" : response}
 
 @app.get("/model/image-to-image/{prompt}")
 def index(prompt):
@@ -25,10 +24,10 @@ def index(prompt):
 @app.get("/lora/text-to-image/{prompt}")
 def index(prompt):
     image_prompt = prompt.replace("_"," ")
-    create_from_text(image_prompt)
+    create_from_text_with_lora(image_prompt)
     return {"message" : "loraimage"}
 
-@app.get("/*")
+@app.get("/*")  
 def index():
     return {"message" : "404"}
 
