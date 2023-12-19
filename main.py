@@ -151,9 +151,11 @@ async def unload_lora():
     returns:
      - JSONResponse: A JSON response with an empty body and a status code of 204 (No Content)
     """
-    await delete_model_with_lora()
-    return JSONResponse(status_code=204)
-
+    response = await delete_model_with_lora()
+    if response[0]:
+        return JSONResponse(status_code=204)
+    else:
+        raise HTTPException(status_code=400, detail=response[1])
 
 @app.get("/{path:path}")  
 async def path_not_found(path):

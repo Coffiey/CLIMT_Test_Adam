@@ -1,19 +1,25 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import "./CreateSDImage.css";
-import TexttoImage from "./interfaces";
+import {
+  TEXT_TO_IMAGE_URL,
+  IMAGE_TO_IMAGE_URL,
+  LOAD_LORA_URL,
+  UNLOAD_LORA_URL,
+} from "./Constants";
+
+import AddLora from "../addLora/AddLora";
 
 function CreateSDImage() {
-  const [uploadState, setUploadState] = useState<string>("Text to Image");
+  const [addLora, setAddLora] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("");
+  const [axiosURL, setAxiosURL] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = useState<null | string>(null);
   const [negativePrompt, setNegativePrompt] = useState<string>("");
   const [guidanceScale, setGuidanceScale] = useState<string>("7");
   const [numInferenceSteps, setNumInferenceSteps] = useState<string>("5");
 
-  const BASEURL: string = "http://127.0.0.1:8000";
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]!;
     const reader = new FileReader();
 
@@ -40,16 +46,14 @@ function CreateSDImage() {
   };
 
   const handleGenerateAIImage = async () => {
-    let url = "/model/text-to-image";
-    //urls
     const formData = new FormData();
     formData.append("prompt", prompt);
     formData.append("negativePrompt", negativePrompt);
     formData.append("guidanceScale", guidanceScale);
     formData.append("numInferenceSteps", numInferenceSteps);
-    if (uploadState === "Image To Image" && uploadedImage) {
+
+    if (axiosURL === IMAGE_TO_IMAGE_URL && uploadedImage) {
       formData.append("image", uploadedImage);
-      url = "/model/image-to-image";
     }
 
     const headers = {
@@ -57,11 +61,13 @@ function CreateSDImage() {
     };
 
     try {
-      const results = await axios.post(BASEURL + url, formData, {
-        headers,
-        responseType: "json",
-      });
-      console.log(results.data);
+      if (axiosURL) {
+        const results = await axios.post(axiosURL, formData, {
+          headers,
+          responseType: "json",
+        });
+        console.log(results.data);
+      }
     } catch (err: any) {
       console.error("Error:", err.message);
     }
@@ -72,14 +78,15 @@ function CreateSDImage() {
       <button
         onClick={() => {
           setUploadedImage(null);
-          setUploadState("Text To Image");
+          setAxiosURL(TEXT_TO_IMAGE_URL);
         }}
       >
         Text To Image
       </button>
-      <button onClick={() => setUploadState("Image To Image")}>
+      <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
         Image To Image
       </button>
+      <button onClick={() => setAddLora(!addLora)}>Add Lora</button>
       <div>
         <div>
           <p>Write a Prompt</p>
@@ -126,7 +133,7 @@ function CreateSDImage() {
           <span> Fancy</span>
         </div>
       </div>
-      {uploadState === "Image To Image" && (
+      {axiosURL === IMAGE_TO_IMAGE_URL && (
         <div>
           <p>Upload an Image</p>
           <label>
@@ -142,8 +149,14 @@ function CreateSDImage() {
         </div>
       )}
       <div>
-        <button onClick={handleGenerateAIImage}>Generate</button>
+        <button
+          disabled={!axiosURL}
+          onClick={handleGenerateAIImage}
+        >
+          Generate
+        </button>
       </div>
+      {addLora && <AddLora setAddLora={setAddLora} />}
       <div>{uploadedImage && <img src={uploadedImage} />}</div>
     </div>
   );
