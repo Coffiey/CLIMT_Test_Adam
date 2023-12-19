@@ -1,23 +1,21 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import "./CreateSDImage.css";
-import {
-  TEXT_TO_IMAGE_URL,
-  IMAGE_TO_IMAGE_URL,
-  LOAD_LORA_URL,
-  UNLOAD_LORA_URL,
-} from "./Constants";
+import { TEXT_TO_IMAGE_URL, IMAGE_TO_IMAGE_URL } from "../Constants/Constants";
 
 import AddLora from "../addLora/AddLora";
 
 function CreateSDImage() {
   const [addLora, setAddLora] = useState<boolean>(false);
+  const [loraLoaded, setLoraLoaded] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("");
   const [axiosURL, setAxiosURL] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = useState<null | string>(null);
   const [negativePrompt, setNegativePrompt] = useState<string>("");
   const [guidanceScale, setGuidanceScale] = useState<string>("7");
   const [numInferenceSteps, setNumInferenceSteps] = useState<string>("5");
+  const [strength, setStrength] = useState<string>("5");
+  const [loraScale, setLoraScale] = useState<string>("5");
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]!;
@@ -45,6 +43,14 @@ function CreateSDImage() {
     setNumInferenceSteps(event.target.value);
   };
 
+  const handleLoraScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setLoraScale(event.target.value);
+  };
+
+  const handleStrengthChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setStrength(event.target.value);
+  };
+
   const handleGenerateAIImage = async () => {
     const formData = new FormData();
     formData.append("prompt", prompt);
@@ -53,7 +59,12 @@ function CreateSDImage() {
     formData.append("numInferenceSteps", numInferenceSteps);
 
     if (axiosURL === IMAGE_TO_IMAGE_URL && uploadedImage) {
+      formData.append("strength", strength);
       formData.append("image", uploadedImage);
+    }
+
+    if (loraLoaded) {
+      formData.append("loraScale", loraScale);
     }
 
     const headers = {
@@ -86,7 +97,12 @@ function CreateSDImage() {
       <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
         Image To Image
       </button>
-      <button onClick={() => setAddLora(!addLora)}>Add Lora</button>
+      <button
+        disabled={loraLoaded}
+        onClick={() => setAddLora(!addLora)}
+      >
+        Add Lora
+      </button>
       <div>
         <div>
           <p>Write a Prompt</p>
@@ -132,20 +148,50 @@ function CreateSDImage() {
           />
           <span> Fancy</span>
         </div>
+        {loraLoaded && (
+          <div>
+            <p>LoRA Scale: {loraScale}</p>
+            <span>Low</span>
+            <input
+              type='range'
+              min='0'
+              max='1'
+              step='0.1'
+              value={loraScale}
+              onChange={handleLoraScaleChange}
+            />
+            <span>High</span>
+          </div>
+        )}
       </div>
       {axiosURL === IMAGE_TO_IMAGE_URL && (
         <div>
-          <p>Upload an Image</p>
-          <label>
+          <div>
+            <p>Image Strength: {loraScale}</p>
+            <span>Low</span>
             <input
-              type='file'
-              accept='image/*'
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
+              type='range'
+              min='0'
+              max='1'
+              step='0.1'
+              value={strength}
+              onChange={handleStrengthChange}
             />
-            <span>Upload</span>
-          </label>
-          <button onClick={() => setUploadedImage(null)}>cancel</button>
+            <span>High</span>
+          </div>
+          <div>
+            <p>Upload an Image</p>
+            <label>
+              <input
+                type='file'
+                accept='image/*'
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+              />
+              <span>Upload</span>
+            </label>
+            <button onClick={() => setUploadedImage(null)}>cancel</button>
+          </div>
         </div>
       )}
       <div>
@@ -156,7 +202,12 @@ function CreateSDImage() {
           Generate
         </button>
       </div>
-      {addLora && <AddLora setAddLora={setAddLora} />}
+      {addLora && (
+        <AddLora
+          setAddLora={setAddLora}
+          setLoraLoaded={setLoraLoaded}
+        />
+      )}
       <div>{uploadedImage && <img src={uploadedImage} />}</div>
     </div>
   );

@@ -1,9 +1,14 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
-import { GET_LORA_URL } from "./constants";
+import {
+  GET_LORA_URL,
+  LOAD_LORA_URL,
+  UNLOAD_LORA_URL,
+} from "../Constants/Constants";
 import AddLoraProps from "./interfaces";
+import Body from "../Interfaces/interfaces";
 
-function AddLora({ setAddLora }: AddLoraProps) {
+function AddLora({ setLoraLoaded }: AddLoraProps) {
   const [loraInput, setLoraInput] = useState<string>("");
   const [loraName, setLoraName] = useState<string>("");
   const [loraTrainingWords, setLoraTrainingWords] = useState<string[]>([]);
@@ -14,10 +19,6 @@ function AddLora({ setAddLora }: AddLoraProps) {
 
   const handleLoraInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLoraInput(event.target.value);
-  };
-
-  const handleDeleteLora = () => {
-    setAddLora(false);
   };
 
   const handleLoraSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -35,11 +36,41 @@ function AddLora({ setAddLora }: AddLoraProps) {
         (trainedWord: string) => trainedWord.split(",")
       );
       setLoraTrainingWords(wordFlatMap);
-      console.log(items[0]);
+      setLoraLoaded(true);
     } catch (error) {
       setError(true);
       console.error("Error during Lora submit:", error);
     }
+  };
+
+  const handleLoadLora = async () => {
+    if (loraFileName) {
+      const body: Body = {
+        downloadURL: loraDownloadURL,
+        name: loraFileName,
+      };
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const result = await axios.put(LOAD_LORA_URL, body, {
+        headers,
+        responseType: "json",
+      });
+
+      console.log(result);
+    }
+  };
+
+  const handleDeleteLora = () => {
+    setLoraInput("");
+    setLoraName("");
+    setLoraImage("");
+    setLoraFileName("");
+    setLoraDownloadURL("");
+    setLoraTrainingWords([]);
+    setLoraLoaded(false);
   };
 
   return (
@@ -93,7 +124,12 @@ function AddLora({ setAddLora }: AddLoraProps) {
                 <img src={loraImage} />
               </div>
               <div>
-                <button disabled={!loraFileName}>Apply Lora</button>
+                <button
+                  disabled={!loraFileName}
+                  onClick={handleLoadLora}
+                >
+                  Apply Lora
+                </button>
                 <button onClick={handleDeleteLora}>Delete Lora</button>
               </div>
             </div>
