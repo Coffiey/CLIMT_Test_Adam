@@ -41,6 +41,7 @@ function CreateSDImage() {
 
   const handleGenerateAIImage = async () => {
     let url = "/model/text-to-image";
+    //urls
     const formData = new FormData();
     formData.append("prompt", prompt);
     formData.append("negativePrompt", negativePrompt);
