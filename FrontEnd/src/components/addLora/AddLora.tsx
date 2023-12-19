@@ -4,9 +4,8 @@ import {
   GET_LORA_URL,
   LOAD_LORA_URL,
   UNLOAD_LORA_URL,
-} from "../Constants/Constants";
-import AddLoraProps from "./interfaces";
-import Body from "../Interfaces/interfaces";
+} from "../../Constants/Constants";
+import { Body, AddLoraProps } from "../../Interfaces/interfaces";
 
 function AddLora({ setLoraLoaded }: AddLoraProps) {
   const [loraInput, setLoraInput] = useState<string>("");
@@ -37,9 +36,10 @@ function AddLora({ setLoraLoaded }: AddLoraProps) {
       );
       setLoraTrainingWords(wordFlatMap);
       setLoraLoaded(true);
-    } catch (error) {
+    } catch (err) {
       setError(true);
-      console.error("Error during Lora submit:", error);
+      console.error("Error during Lora submit:", err);
+      console.log(error);
     }
   };
 
@@ -54,16 +54,27 @@ function AddLora({ setLoraLoaded }: AddLoraProps) {
         "Content-Type": "application/json",
       };
 
-      const result = await axios.put(LOAD_LORA_URL, body, {
-        headers,
-        responseType: "json",
-      });
+      try {
+        const result = await axios.put(LOAD_LORA_URL, body, {
+          headers,
+          responseType: "json",
+        });
 
-      console.log(result);
+        console.log(result.data);
+      } catch (err: any) {
+        console.error("Error:", err.message);
+      }
     }
   };
 
-  const handleDeleteLora = () => {
+  const handleDeleteLora = async () => {
+    try {
+      const result = await axios.delete(UNLOAD_LORA_URL);
+      console.log(result.data);
+    } catch (err: any) {
+      console.error("Error:", err.message);
+    }
+
     setLoraInput("");
     setLoraName("");
     setLoraImage("");

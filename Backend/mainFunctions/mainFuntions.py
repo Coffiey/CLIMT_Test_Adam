@@ -4,21 +4,22 @@ import io
 import httpx
 
 from PIL import Image
+base_directory = './Frontend/Public/model'
 
 def create_image_file_tree():
     """function will onload, create  image pathways for the AI model to save to, simulating useing a cloud storage system"""
-    base_directory = './created/model'
-    directories = [os.path.join(base_directory, 'text_to_image'), os.path.join(base_directory, 'image_to_image'), os.path.join(base_directory, 'lora')]
+    directories = [os.path.join(base_directory, 'text_to_image'), os.path.join(base_directory, 'image_to_image'), os.path.join(base_directory, 'lora'), os.path.join(base_directory, 'reference_image')]
     for directory in directories:
         if not os.path.exists(directory):
             os.makedirs(directory)
 
 
-def process_base64_image(image):
+def process_base64_image(image ,prompt):
     """
     Processes a base64-encoded image, decodes it, and opens it as a PIL Image.
 
     Parameters:
+     - prompt (string): name for the sake of saving the image
      - image (str): Base64-encoded image data.
 
    retruns:
@@ -28,6 +29,7 @@ def process_base64_image(image):
         image_without_prefix = image.split(",")[1]
         image_bytes = base64.b64decode(image_without_prefix)
         image_for_prompt = Image.open(io.BytesIO(image_bytes))
+        image_for_prompt.save(os.path.join(base_directory, 'reference_image', f"{prompt[:10]}Ref.png" ))
         return [image_for_prompt, False]
     except Exception as e:
         return [False, e]

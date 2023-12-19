@@ -1,11 +1,20 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 import "./CreateSDImage.css";
-import { TEXT_TO_IMAGE_URL, IMAGE_TO_IMAGE_URL } from "../Constants/Constants";
+import {
+  TEXT_TO_IMAGE_URL,
+  IMAGE_TO_IMAGE_URL,
+} from "../../Constants/Constants";
+import { CreateSDImagerops } from "../../Interfaces/interfaces";
 
 import AddLora from "../addLora/AddLora";
 
-function CreateSDImage() {
+function CreateSDImage({
+  setImage,
+  setImageLoading,
+  setDisplayImageView,
+  displayImageView,
+}: CreateSDImagerops) {
   const [addLora, setAddLora] = useState<boolean>(false);
   const [loraLoaded, setLoraLoaded] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("");
@@ -51,6 +60,10 @@ function CreateSDImage() {
     setStrength(event.target.value);
   };
 
+  const handleReset = () => {
+    setDisplayImageView(false);
+  };
+
   const handleGenerateAIImage = async () => {
     const formData = new FormData();
     formData.append("prompt", prompt);
@@ -73,11 +86,14 @@ function CreateSDImage() {
 
     try {
       if (axiosURL) {
+        setImageLoading(true);
+        setDisplayImageView(true);
         const results = await axios.post(axiosURL, formData, {
           headers,
           responseType: "json",
         });
-        console.log(results.data);
+        setImage(results.data.generatedImageURL);
+        setImageLoading(false);
       }
     } catch (err: any) {
       console.error("Error:", err.message);
@@ -85,131 +101,134 @@ function CreateSDImage() {
   };
 
   return (
-    <div>
-      <button
-        onClick={() => {
-          setUploadedImage(null);
-          setAxiosURL(TEXT_TO_IMAGE_URL);
-        }}
-      >
-        Text To Image
-      </button>
-      <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
-        Image To Image
-      </button>
-      <button
-        disabled={loraLoaded}
-        onClick={() => setAddLora(!addLora)}
-      >
-        Add Lora
-      </button>
-      <div>
+    <>
+      {displayImageView ? (
         <div>
-          <p>Write a Prompt</p>
-          <input
-            type='text'
-            placeholder='prompt...'
-            value={prompt}
-            onChange={handlePromptChange}
-          />
+          <button onClick={handleReset}>Generate Another Image</button>
         </div>
+      ) : (
         <div>
-          <p>Write a Negative Prompt</p>
-          <input
-            type='text'
-            placeholder='negative prompt...'
-            value={negativePrompt}
-            onChange={handleNegativePromptChange}
-          />
-        </div>
-        <div>
-          <p>Set guidance: {guidanceScale}</p>
-          <span>relaxed</span>
-          <input
-            type='range'
-            min='1'
-            max='15'
-            step='0.5'
-            value={guidanceScale}
-            onChange={handleGuidanceScaleChange}
-          />
-          <span>strict</span>
-        </div>
-        <div>
-          <p>Number of Inference Steps: {numInferenceSteps}</p>
-          <span>Fast </span>
-          <input
-            type='range'
-            min='5'
-            max='50'
-            step='1'
-            value={numInferenceSteps}
-            onChange={handleInferenceChange}
-          />
-          <span> Fancy</span>
-        </div>
-        {loraLoaded && (
+          <button
+            onClick={() => {
+              setUploadedImage(null);
+              setAxiosURL(TEXT_TO_IMAGE_URL);
+            }}
+          >
+            Text To Image
+          </button>
+          <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
+            Image To Image
+          </button>
+          <button
+            disabled={loraLoaded}
+            onClick={() => setAddLora(!addLora)}
+          >
+            Add Lora
+          </button>
           <div>
-            <p>LoRA Scale: {loraScale}</p>
-            <span>Low</span>
-            <input
-              type='range'
-              min='0'
-              max='1'
-              step='0.1'
-              value={loraScale}
-              onChange={handleLoraScaleChange}
-            />
-            <span>High</span>
-          </div>
-        )}
-      </div>
-      {axiosURL === IMAGE_TO_IMAGE_URL && (
-        <div>
-          <div>
-            <p>Image Strength: {loraScale}</p>
-            <span>Low</span>
-            <input
-              type='range'
-              min='0'
-              max='1'
-              step='0.1'
-              value={strength}
-              onChange={handleStrengthChange}
-            />
-            <span>High</span>
-          </div>
-          <div>
-            <p>Upload an Image</p>
-            <label>
+            <div>
+              <p>Write a Prompt</p>
               <input
-                type='file'
-                accept='image/*'
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
+                type='text'
+                placeholder='prompt...'
+                value={prompt}
+                onChange={handlePromptChange}
               />
-              <span>Upload</span>
-            </label>
-            <button onClick={() => setUploadedImage(null)}>cancel</button>
+            </div>
+            <div>
+              <p>Write a Negative Prompt</p>
+              <input
+                type='text'
+                placeholder='negative prompt...'
+                value={negativePrompt}
+                onChange={handleNegativePromptChange}
+              />
+            </div>
+            <div>
+              <p>Set guidance: {guidanceScale}</p>
+              <span>relaxed</span>
+              <input
+                type='range'
+                min='1'
+                max='15'
+                step='0.5'
+                value={guidanceScale}
+                onChange={handleGuidanceScaleChange}
+              />
+              <span>strict</span>
+            </div>
+            <div>
+              <p>Number of Inference Steps: {numInferenceSteps}</p>
+              <span>Fast </span>
+              <input
+                type='range'
+                min='5'
+                max='50'
+                step='1'
+                value={numInferenceSteps}
+                onChange={handleInferenceChange}
+              />
+              <span> Fancy</span>
+            </div>
+            {loraLoaded && (
+              <div>
+                <p>LoRA Scale: {loraScale}</p>
+                <span>Low</span>
+                <input
+                  type='range'
+                  min='0'
+                  max='1'
+                  step='0.1'
+                  value={loraScale}
+                  onChange={handleLoraScaleChange}
+                />
+                <span>High</span>
+              </div>
+            )}
           </div>
+          {axiosURL === IMAGE_TO_IMAGE_URL && (
+            <div>
+              <div>
+                <p>Image Strength: {loraScale}</p>
+                <span>Low</span>
+                <input
+                  type='range'
+                  min='0'
+                  max='1'
+                  step='0.1'
+                  value={strength}
+                  onChange={handleStrengthChange}
+                />
+                <span>High</span>
+              </div>
+              <div>
+                <p>Upload an Image</p>
+                <label>
+                  <input
+                    type='file'
+                    accept='image/*'
+                    onChange={handleImageUpload}
+                    style={{ display: "none" }}
+                  />
+                  <span>Upload</span>
+                </label>
+                <button onClick={() => setUploadedImage(null)}>cancel</button>
+              </div>
+            </div>
+          )}
+          <div>
+            <button
+              disabled={!axiosURL}
+              onClick={handleGenerateAIImage}
+            >
+              Generate
+            </button>
+          </div>
+          {addLora && <AddLora setLoraLoaded={setLoraLoaded} />}
+          <div>{uploadedImage && <img src={uploadedImage} />}</div>
         </div>
       )}
-      <div>
-        <button
-          disabled={!axiosURL}
-          onClick={handleGenerateAIImage}
-        >
-          Generate
-        </button>
-      </div>
-      {addLora && (
-        <AddLora
-          setAddLora={setAddLora}
-          setLoraLoaded={setLoraLoaded}
-        />
-      )}
-      <div>{uploadedImage && <img src={uploadedImage} />}</div>
-    </div>
+    </>
   );
 }
 
