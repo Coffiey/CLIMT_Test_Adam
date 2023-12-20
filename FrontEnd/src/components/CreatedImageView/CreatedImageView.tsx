@@ -1,6 +1,16 @@
+import { useEffect, useState } from "react";
 import { CreatedImageViewProps } from "../../Interfaces/interfaces";
 
 function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
+  const [imageURL, setImageURL] = useState<string | null>(null)
+
+  useEffect(()=>{
+    if (image) {
+      setImageURL(image.slice(17))
+    }
+    console.log(imageURL)
+
+  },[image])
   return (
     <div>
       <p>Your Image</p>
@@ -8,7 +18,7 @@ function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
         <img src='media/4pnu.gif' />
       ) : (
         <>
-          {image ? <img src={image} /> : <img src='/media/placeholder.jpg' />}
+          {imageURL ? <img src={`.${imageURL}`} /> : <img src='/media/placeholder.jpg' />}
         </>
       )}
     </div>

@@ -2,8 +2,10 @@ import os
 import base64
 import io
 import httpx
+import requests
 
 from PIL import Image
+
 base_directory = './Frontend/Public/model'
 
 def create_image_file_tree():
@@ -28,21 +30,21 @@ def process_base64_image(image ,prompt):
     try:
         image_without_prefix = image.split(",")[1]
         image_bytes = base64.b64decode(image_without_prefix)
-        image_for_prompt = Image.open(io.BytesIO(image_bytes))
-        image_for_prompt.save(os.path.join(base_directory, 'reference_image', f"{prompt[:10]}Ref.png" ))
+        image_for_prompt = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        file = prompt.replace(" ","_")
+        image_for_prompt.save(f"./Frontend/Public/model/reference_image/{file}Ref.png")
         return [image_for_prompt, False]
     except Exception as e:
         return [False, e]
 
   
-async def download_lora_weights(body):
+async def download_lora_weights(download_URL, name):
     """
     Downloads lora weight as a .safetensor file
 
     Parameters:
-     - body (dict): A dictionary containing the following keys:
-        - "downloadURL" (str): The URL from which to download the file.
-        - "name" (str): The desired name for the downloaded file.
+    - "downloadURL" (str): The URL from which to download the file.
+    - "name" (str): The desired name for the downloaded file.
 
     retruns:
         [safetensor location in file tree, error]
@@ -51,19 +53,15 @@ async def download_lora_weights(body):
         - chat GTP was used to create boiler plate code for this as I am unfamiliar with httpx in python, was then edited by me
         - python docs
     """
-    download_URL = body["downloadURL"]
-    name = body["name"]
-    save_path = "./created/model/lora/"
-
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(download_URL)
-            response.raise_for_status()  # Raise an exception for HTTP errors (e.g., 404)
-            file_path = os.path.join(save_path, name)
-            with open(file_path, "wb") as file:
-                file.write(response.content)
+    try:
+        print(download_URL, name)
+        response = await requests.get(download_URL)
+        print(response.status_code)
+        file_path = f"./FrontEnd/public/model/lora/{name}"
+        with open(file_path, mode="wb") as file:
+            file.write(response.content)
             return  [file_path, False]
-        except httpx.HTTPError as e:
-            return [False, "HTTP error:" + e]
-        except Exception as e:
-            return [False, e]
+    except httpx.HTTPError as e:
+        return [False, e]
+    except Exception as e:
+        return [False, e]

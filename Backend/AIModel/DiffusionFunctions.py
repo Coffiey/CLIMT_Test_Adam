@@ -1,6 +1,6 @@
 from PIL import Image
 from .DiffusionModel import pipe_image_to_image, pipe_text_to_image
-
+base_directory = './Frontend/Public/model'
 
 async def create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale=None):
     """
@@ -17,11 +17,13 @@ async def create_from_text(prompt, negative_prompt, guidance_scale, num_inferenc
         [image url in file tree, error]
     """
     try:
+        print("In Function",prompt, negative_prompt, type(guidance_scale), num_inference_steps, lora_scale)
         if lora_scale:
             pipe_text_to_image.fuse_lora(lora_scale)
         image = pipe_text_to_image(prompt=prompt, negative_prompt=negative_prompt,guidance_scale=guidance_scale, num_inference_steps=num_inference_steps).images[0] 
+        # image = pipe_text_to_image(prompt=prompt, negative_prompt=negative_prompt).images[0] 
         image_prompt = prompt.replace(' ', '_')[:10]
-        image_location = "created/model/text_to_image/" + image_prompt + ".png"
+        image_location = base_directory + "/text_to_image/" + image_prompt + ".png"
         image.save(image_location)
         return [{"generatedImageURL": image_location}, False]
     except Exception as e:
@@ -49,11 +51,11 @@ async def create_from_image(prompt, negative_prompt, guidance_scale, num_inferen
     try:
         if lora_scale:
             pipe_text_to_image.fuse_lora(lora_scale)
-        prompt_image = Image.open("./cow.jpeg").convert("RGB")
+        prompt_image = image_for_prompt
         prompt_image = prompt_image.resize((768, 512))
-        image = pipe_image_to_image(prompt=prompt,negative_prompt=negative_prompt, image=image_for_prompt, num_inference_steps=num_inference_steps,strength=strength, guidance_scale=guidance_scale).images[0] 
+        image = pipe_image_to_image(prompt=prompt,negative_prompt=negative_prompt, image=prompt_image, num_inference_steps=num_inference_steps,strength=strength, guidance_scale=guidance_scale).images[0]
         image_prompt = prompt.replace(' ', '_')[:10]
-        image_location = "created/model/text_to_image/" + image_prompt + ".png"
+        image_location = base_directory + "/image_to_image/" + image_prompt + ".png"
         image.save(image_location)
         return [{"generatedImageURL": image_location}, False]
     except Exception as e:
@@ -71,8 +73,8 @@ async def load_model_with_lora(file_location, weight_name):
         [success message, error]
     """
     try:
-        pipe_text_to_image.load_lora_weights(file_location=file_location, weight_name=weight_name)
-        pipe_image_to_image.load_lora_weights(file_location=file_location, weight_name=weight_name)
+        pipe_text_to_image.load_lora_weights(file_location, weight_name)
+        pipe_image_to_image.load_lora_weights(file_location, weight_name)
         return ["lora:"+ weight_name + "has been loaded", False]
     except Exception as e:
         return [False, e]
