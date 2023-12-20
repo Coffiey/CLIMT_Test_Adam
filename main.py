@@ -1,10 +1,8 @@
 import uvicorn
-import base64
-import io
+import time
 
 from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse
-from PIL import Image
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from Backend.AIModel.DiffusionFunctions import create_from_image, create_from_text, delete_model_with_lora, load_model_with_lora
@@ -66,8 +64,8 @@ async def index():
 async def text_to_image(
     prompt: str = Form("prompt"),
     negative_prompt: str = Form("negativePrompt"),
-    guidance_scale: str = Form("guidanceScale"),
-    num_inference_steps: str = Form("numInferenceSteps"),
+    guidance_scale: float = Form("guidanceScale"),
+    num_inference_steps: float = Form("numInferenceSteps"),
     lora_scale: float = Form("loraScale")
     ):
     """
@@ -83,9 +81,9 @@ async def text_to_image(
     returns:
      - JSONResponse: JSON response with image data or error details.
     """
-    print(prompt)
-    # response = await create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
-    response = [{"stuff":"stuff"}]
+    response = await create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
+    # response = [{"generatedImageURL": "/model/image_to_image/Horse.jpeg"}, False]
+    # time.sleep(10)
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -117,8 +115,9 @@ async def image_to_image(
     returns:
      - JSONResponse: JSON response with image data or error details.
     """
-    image_for_prompt = process_base64_image(image)
-    response = await create_from_image(guidance_scale, num_inference_steps, image_for_prompt, strength, lora_scale)
+    image_for_prompt = process_base64_image(image, prompt)
+    response = await create_from_image(prompt, negative_prompt, guidance_scale, num_inference_steps, image_for_prompt, strength, lora_scale)
+    # response = [{"generatedImageURL": "/model/image_to_image/Horse.jpeg"}, False]
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -139,6 +138,7 @@ async def load_lora(request: Request):
     request_body =  request.json()
     lora_weights = await download_lora_weights(request_body)
     response = await load_model_with_lora(file_location=lora_weights, weight_name=lora_weights)
+    # response = [{"generatedImageURL": "Horse.jpeg"}, False]
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -154,6 +154,7 @@ async def unload_lora():
      - JSONResponse: A JSON response with an empty body and a status code of 204 (No Content)
     """
     response = await delete_model_with_lora()
+    # response = [{"generatedImageURL": "Horse.jpeg"}, False]
     if response[0]:
         return JSONResponse(status_code=204)
     else:
