@@ -18,7 +18,7 @@ function CreateSDImage({
   const [addLora, setAddLora] = useState<boolean>(false);
   const [loraLoaded, setLoraLoaded] = useState<boolean>(false);
   const [prompt, setPrompt] = useState<string>("");
-  const [axiosURL, setAxiosURL] = useState<string | null>(null);
+  const [axiosURL, setAxiosURL] = useState<string>(TEXT_TO_IMAGE_URL);
   const [uploadedImage, setUploadedImage] = useState<null | string>(null);
   const [negativePrompt, setNegativePrompt] = useState<string>("");
   const [guidanceScale, setGuidanceScale] = useState<string>("7");
@@ -65,11 +65,14 @@ function CreateSDImage({
   };
 
   const handleGenerateAIImage = async () => {
+    let funcURL = axiosURL;
     const formData = new FormData();
     formData.append("prompt", prompt);
     formData.append("negativePrompt", negativePrompt);
     formData.append("guidanceScale", guidanceScale);
     formData.append("numInferenceSteps", numInferenceSteps);
+
+    console.log(formData.get("negativePrompt"));
 
     if (axiosURL === IMAGE_TO_IMAGE_URL && uploadedImage) {
       formData.append("strength", strength);
@@ -77,7 +80,7 @@ function CreateSDImage({
     }
 
     if (loraLoaded) {
-      formData.append("loraScale", loraScale);
+      funcURL = funcURL + `?lora_scale=${loraScale}`;
     }
 
     const headers = {
@@ -85,16 +88,14 @@ function CreateSDImage({
     };
 
     try {
-      if (axiosURL) {
-        setImageLoading(true);
-        setDisplayImageView(true);
-        const results = await axios.post(axiosURL, formData, {
-          headers,
-          responseType: "json",
-        });
-        setImage(results.data.generatedImageURL);
-        setImageLoading(false);
-      }
+      setImageLoading(true);
+      setDisplayImageView(true);
+      const results = await axios.post(funcURL, formData, {
+        headers,
+        responseType: "json",
+      });
+      setImage(results.data.generatedImageURL);
+      setImageLoading(false);
     } catch (err: any) {
       console.error("Error:", err.message);
     }
