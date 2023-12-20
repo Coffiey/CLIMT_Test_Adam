@@ -1,7 +1,6 @@
 import uvicorn
-import time
 
-from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi import FastAPI, Form, HTTPException
 from pydantic import BaseModel
 from typing import Annotated
 from fastapi.responses import HTMLResponse
@@ -10,11 +9,9 @@ from fastapi.responses import JSONResponse
 from Backend.AIModel.DiffusionFunctions import create_from_image, create_from_text, delete_model_with_lora, load_model_with_lora
 from Backend.mainFunctions.mainFuntions import create_image_file_tree, process_base64_image, download_lora_weights
 
-
 class LoraBody(BaseModel):
     downloadURL: str
     name: str
-
 
 """generates App instance"""
 app = FastAPI()
@@ -95,11 +92,7 @@ async def text_to_image(
     guidance_scale=guidanceScale
     num_inference_steps=numInferenceSteps
     
-    
-    print(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
     response = await create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
-    # response = [{"generatedImageURL": "/model/image_to_image/Horse.jpeg"}, False]
-    # time.sleep(10)
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -135,10 +128,8 @@ async def image_to_image(
     guidance_scale=guidanceScale
     num_inference_steps=numInferenceSteps
     image_array = process_base64_image(image, prompt)
-    print(image_array)
     image_for_prompt = image_array[0]
     response = await create_from_image(prompt, negative_prompt, guidance_scale, num_inference_steps, image_for_prompt, strength, lora_scale)
-    # response = [{"generatedImageURL": "/model/image_to_image/Horse.jpeg"}, False]
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -173,7 +164,6 @@ async def unload_lora():
      - JSONResponse: A JSON response with an empty body and a status code of 204 (No Content)
     """
     response = await delete_model_with_lora()
-    # response = [{"generatedImageURL": "Horse.jpeg"}, False]
     if response[0]:
         return JSONResponse(status_code=204)
     else:

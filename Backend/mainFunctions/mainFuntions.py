@@ -54,9 +54,7 @@ async def download_lora_weights(download_URL, name):
         - python docs
     """
     try:
-        print(download_URL, name)
         response = await requests.get(download_URL)
-        print(response.status_code)
         file_path = f"./FrontEnd/public/model/lora/{name}"
         with open(file_path, mode="wb") as file:
             file.write(response.content)

@@ -17,11 +17,9 @@ async def create_from_text(prompt, negative_prompt, guidance_scale, num_inferenc
         [image url in file tree, error]
     """
     try:
-        print("In Function",prompt, negative_prompt, type(guidance_scale), num_inference_steps, lora_scale)
         if lora_scale:
             pipe_text_to_image.fuse_lora(lora_scale)
         image = pipe_text_to_image(prompt=prompt, negative_prompt=negative_prompt,guidance_scale=guidance_scale, num_inference_steps=num_inference_steps).images[0] 
-        # image = pipe_text_to_image(prompt=prompt, negative_prompt=negative_prompt).images[0] 
         image_prompt = prompt.replace(' ', '_')[:10]
         image_location = base_directory + "/text_to_image/" + image_prompt + ".png"
         image.save(image_location)
