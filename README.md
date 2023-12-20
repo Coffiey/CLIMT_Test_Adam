@@ -22,11 +22,12 @@ _by Adam_
 
 ### Instillation Insutrctions.
 
-#### Backend<br/><br/>
-setp 1 git clone the repository:<br/>
+#### Backend
+
+\*\*<span style="color: grey;">setp 1 git clone the repository:<br/>
 `git clone https://github.com/Coffiey/CLIMT_Test_Adam.git`
 
-step 2 create a virtual enviroment for the fastAPI in route run:<br/>
+**<span style="color: grey;">step 2 create a virtual enviroment for the fastAPI in route run:</span>** <br/>
 for mac:<br/>
 `python3 -m venv venv //create the environment`
 `source venv/bin/activate //load the environment`
@@ -35,12 +36,12 @@ for windows:<br/>
 `python -m venv venv //create the environment`
 `venc/scripts/activate //load the environment`
 
-step 3 load Dependencies:<br/>
+**<span style="color: grey;">step 3 load Dependencies:</span>** <br/>
 a requirements.txt file is included to bulk install all required python packages
 
 `pip install -r requirements.txt`
 
-set 4 run server:<br/>
+**<span style="color: grey;">set 4 run server:</span>**<br/>
 please note that I have loaded my hugging face token into git so the login should be autmatic but if it has expired then create a token at <a>https://huggingface.co/settings/tokens</a> and then paste it to the concole when promped by the log in fuction.
 
 variable parameters:
@@ -57,16 +58,20 @@ for windows:<br/>
 `python main.py`
 
 Frontend<br/><br/>
-step 1 cd into FrontEnd:<br/>
+**<span style="color: grey;">step 1 cd into FrontEnd:</span>**<br/>
+\*\*<span style="color: grey;">step 1 cd into FrontEnd:<br/>
 `cd FrontEnd`
 
-step 2 install depenencies:<br/>
+**<span style="color: grey;">step 1 cd into FrontEnd:</span>**<br/>
+\*\*<span style="color: grey;">step 2 install depenencies:<br/>
 `npm Install`
 
-step 3 run build command:<br/>
+**<span style="color: grey;">step 1 cd into FrontEnd:</span>**<br/>
+\*\*<span style="color: grey;">step 3 run build command:<br/>
 `npm run build`
 
-step 4 run build file:<br/>
+**<span style="color: grey;">step 1 cd into FrontEnd:</span>**<br/>
+\*\*<span style="color: grey;">step 4 run build file:<br/>
 `npm run preview`
 
 the backend will run seperatly from the front end and call using exteral end points, please note cors is set globally for the sake of development as i developed this on two machines, if depolyment is ever an option CORS needs to be edited
