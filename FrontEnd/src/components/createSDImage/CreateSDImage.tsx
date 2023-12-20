@@ -189,7 +189,7 @@ function CreateSDImage({
           {axiosURL === IMAGE_TO_IMAGE_URL && (
             <div>
               <div>
-                <p>Image Strength: {loraScale}</p>
+                <p>Image Strength: {strength}</p>
                 <span>Low</span>
                 <input
                   type='range'
