@@ -9,7 +9,7 @@ function App() {
   const [image, setImage] = useState<string | null>(null);
 
   return (
-    <>
+    <div className='Body'>
       <CreateSDImage
         setImage={setImage}
         setImageLoading={setImageLoading}
@@ -20,8 +20,7 @@ function App() {
         image={image}
         imageLoading={imageLoading}
       />
-      )
-    </>
+    </div>
   );
 }
 

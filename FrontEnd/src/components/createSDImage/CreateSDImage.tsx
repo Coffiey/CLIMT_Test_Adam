@@ -104,119 +104,132 @@ function CreateSDImage({
   return (
     <>
       {displayImageView ? (
-        <div>
+        <div className='CSDContainer'>
           <button onClick={handleReset}>Generate Another Image</button>
         </div>
       ) : (
-        <div>
-          <button
-            onClick={() => {
-              setUploadedImage(null);
-              setAxiosURL(TEXT_TO_IMAGE_URL);
-            }}
-          >
-            Text To Image
-          </button>
-          <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
-            Image To Image
-          </button>
-          <button
-            disabled={loraLoaded}
-            onClick={() => setAddLora(!addLora)}
-          >
-            Add Lora
-          </button>
-          <div>
-            <div>
-              <p>Write a Prompt</p>
-              <input
-                type='text'
-                placeholder='prompt...'
-                value={prompt}
-                onChange={handlePromptChange}
-              />
-            </div>
-            <div>
-              <p>Write a Negative Prompt</p>
-              <input
-                type='text'
-                placeholder='negative prompt...'
-                value={negativePrompt}
-                onChange={handleNegativePromptChange}
-              />
-            </div>
-            <div>
-              <p>Set guidance: {guidanceScale}</p>
-              <span>relaxed</span>
-              <input
-                type='range'
-                min='1'
-                max='15'
-                step='0.5'
-                value={guidanceScale}
-                onChange={handleGuidanceScaleChange}
-              />
-              <span>strict</span>
-            </div>
-            <div>
-              <p>Number of Inference Steps: {numInferenceSteps}</p>
-              <span>Fast </span>
-              <input
-                type='range'
-                min='5'
-                max='50'
-                step='1'
-                value={numInferenceSteps}
-                onChange={handleInferenceChange}
-              />
-              <span> Fancy</span>
-            </div>
-            {loraLoaded && (
-              <div>
-                <p>LoRA Scale: {loraScale}</p>
-                <span>Low</span>
-                <input
-                  type='range'
-                  min='0'
-                  max='1'
-                  step='0.1'
-                  value={loraScale}
-                  onChange={handleLoraScaleChange}
-                />
-                <span>High</span>
-              </div>
-            )}
+        <div className='CSDContainer'>
+          <div className='ButtonDiv'>
+            <button
+              onClick={() => {
+                setUploadedImage(null);
+                setAxiosURL(TEXT_TO_IMAGE_URL);
+              }}
+            >
+              Text To Image
+            </button>
+            <button onClick={() => setAxiosURL(IMAGE_TO_IMAGE_URL)}>
+              Image To Image
+            </button>
+            <button
+              disabled={loraLoaded}
+              onClick={() => setAddLora(!addLora)}
+            >
+              Add Lora
+            </button>
           </div>
-          {axiosURL === IMAGE_TO_IMAGE_URL && (
-            <div>
+          <div className='promptDivContainer'>
+            <div className='promptDiv'>
               <div>
-                <p>Image Strength: {strength}</p>
-                <span>Low</span>
+                <p>Write a Prompt</p>
+                <input
+                  className='TextInput'
+                  type='text'
+                  placeholder='prompt...'
+                  value={prompt}
+                  onChange={handlePromptChange}
+                />
+              </div>
+              <div>
+                <p>Write a Negative Prompt</p>
+                <input
+                  className='TextInput'
+                  type='text'
+                  placeholder='negative prompt...'
+                  value={negativePrompt}
+                  onChange={handleNegativePromptChange}
+                />
+              </div>
+              <div>
+                <p>Set guidance: {guidanceScale}</p>
+                <span>relaxed</span>
                 <input
                   type='range'
-                  min='0'
-                  max='1'
-                  step='0.1'
-                  value={strength}
-                  onChange={handleStrengthChange}
+                  min='1'
+                  max='15'
+                  step='0.5'
+                  value={guidanceScale}
+                  onChange={handleGuidanceScaleChange}
                 />
-                <span>High</span>
+                <span>strict</span>
               </div>
               <div>
-                <p>Upload an Image</p>
-                <label>
-                  <input
-                    type='file'
-                    accept='image/*'
-                    onChange={handleImageUpload}
-                    style={{ display: "none" }}
-                  />
-                  <span>Upload</span>
-                </label>
-                <button onClick={() => setUploadedImage(null)}>cancel</button>
+                <p>Number of Inference Steps: {numInferenceSteps}</p>
+                <span>Fast </span>
+                <input
+                  type='range'
+                  min='5'
+                  max='50'
+                  step='1'
+                  value={numInferenceSteps}
+                  onChange={handleInferenceChange}
+                />
+                <span> Fancy</span>
               </div>
             </div>
-          )}
+
+            <div className='ImageDiv'>
+              {axiosURL === IMAGE_TO_IMAGE_URL && (
+                <>
+                  <div>
+                    <p>Image Strength: {strength}</p>
+                    <span>Low</span>
+                    <input
+                      type='range'
+                      min='0'
+                      max='1'
+                      step='0.1'
+                      value={strength}
+                      onChange={handleStrengthChange}
+                    />
+                    <span>High</span>
+                  </div>
+                  <div>
+                    <p>Upload an Image</p>
+                    <label>
+                      <input
+                        type='file'
+                        accept='image/*'
+                        onChange={handleImageUpload}
+                        style={{ display: "none" }}
+                      />
+                      <span>Upload</span>
+                    </label>
+                    <button onClick={() => setUploadedImage(null)}>
+                      cancel
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className='LoraDiv'>
+              {loraLoaded && (
+                <div>
+                  <p>LoRA Scale: {loraScale}</p>
+                  <span>Low</span>
+                  <input
+                    type='range'
+                    min='0'
+                    max='1'
+                    step='0.1'
+                    value={loraScale}
+                    onChange={handleLoraScaleChange}
+                  />
+                  <span>High</span>
+                </div>
+              )}
+            </div>
+          </div>
           <div>
             <button
               disabled={!axiosURL}

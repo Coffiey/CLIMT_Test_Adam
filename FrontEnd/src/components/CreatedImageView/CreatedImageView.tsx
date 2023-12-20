@@ -1,24 +1,49 @@
 import { useEffect, useState } from "react";
 import { CreatedImageViewProps } from "../../Interfaces/interfaces";
+import "./CreatedImageView.css";
 
 function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
-  const [imageURL, setImageURL] = useState<string | null>(null)
+  const [imageURL, setImageURL] = useState<string | null>(null);
 
-  useEffect(()=>{
-    if (image) {
-      setImageURL(image.slice(17))
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    if (imageURL) {
+      link.href = imageURL;
+      link.download = "downloaded_image.jpg";
+      link.click();
     }
-    console.log(imageURL)
+  };
 
-  },[image])
+  useEffect(() => {
+    if (image) {
+      setImageURL(image.slice(17));
+    }
+    console.log(imageURL);
+  }, [image]);
   return (
-    <div>
-      <p>Your Image</p>
+    <div className='CIVconainer'>
+      <p className={imageURL ? "FinalImageTitle" : "FinalPlaceHolderTitle"}>
+        Your Image
+      </p>
       {imageLoading ? (
-        <img src='media/4pnu.gif' />
+        <img
+          className='finalImage'
+          src='media/4pnu.gif'
+        />
       ) : (
         <>
-          {imageURL ? <img src={`.${imageURL}`} /> : <img src='/media/placeholder.jpg' />}
+          {imageURL ? (
+            <img
+              className='finalImage'
+              src={`.${imageURL}`}
+            />
+          ) : (
+            <img
+              className='finalImage'
+              src='/media/placeholder-image.png'
+            />
+          )}
+          {imageURL && <button onClick={handleDownload}>Download Image</button>}
         </>
       )}
     </div>
