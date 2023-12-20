@@ -45,9 +45,9 @@ _A `requirements.txt` file is included for bulk installation of all required Pyt
 _please note that I have loaded my hugging face token into git so the login should be autmatic but if it has expired then create a token at <a>https://huggingface.co/settings/tokens</a> and then paste it to the concole when promped by the log in fuction._
 
 variable parameters:
-|--Backend
-| |--AIModel
-| --DiffusionModel.py
+`|--Backend
+    |--AIModel
+        |--DiffusionModel.py`
 
 _if the machine you use has a dedicated GPU then set `device = "cpu"` and `torch_dtype=torch.float16` for best preformace, the current set up if for a laptop with intergrated CPU/GPU_
 
@@ -97,13 +97,16 @@ _the backend will run seperatly from the front end and call using exteral end po
 - **DELETE("/api/lora/delete-lora-model")**
   - This unloads the previously loaded LoRA weights.
 
-_references:_
+## references:
+
 as per the outline, I have made notes on any code that is directly copied from chatGTP or google in the doco strings or comments. Athough this is a very small amout, however it is worth noting that ChatGTP and stack overflow were used in a far more casual manor to answer minor syntax queries as well as provide insight on doco-string best practices and formating best practices.
 
-<a>https://chat.openai.com/</a>
-<a>https://stackoverflow.com/</a>
-<a>https://fastapi.tiangolo.com/</a>
-<a>https://docs.python.org/3.9/</a>
+<a>https://chat.openai.com/</a><br/>
+<a>https://stackoverflow.com/</a><br/>
+<a>https://fastapi.tiangolo.com/</a><br/>
+<a>https://docs.python.org/3.9/</a><br/>
+
+<br/><br/>
 
 <p align="center">
   <strong>Final Notes:</strong><br/>
