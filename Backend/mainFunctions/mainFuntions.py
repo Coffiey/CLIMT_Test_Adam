@@ -62,6 +62,6 @@ async def download_lora_weights(body):
                 file.write(response.content)
             return  [file_path, False]
         except httpx.HTTPError as e:
-            return [False, f"HTTP error: {e}"]
+            return [False, "HTTP error:" + e]
         except Exception as e:
             return [False, e]

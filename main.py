@@ -66,8 +66,8 @@ async def index():
 async def text_to_image(
     prompt: str = Form("prompt"),
     negative_prompt: str = Form("negativePrompt"),
-    guidance_scale: float = Form("guidanceScale"),
-    num_inference_steps: float = Form("numInferenceSteps"),
+    guidance_scale: str = Form("guidanceScale"),
+    num_inference_steps: str = Form("numInferenceSteps"),
     lora_scale: float = Form("loraScale")
     ):
     """
@@ -83,7 +83,9 @@ async def text_to_image(
     returns:
      - JSONResponse: JSON response with image data or error details.
     """
-    response = await create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
+    print(prompt)
+    # response = await create_from_text(prompt, negative_prompt, guidance_scale, num_inference_steps, lora_scale)
+    response = [{"stuff":"stuff"}]
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
@@ -116,7 +118,7 @@ async def image_to_image(
      - JSONResponse: JSON response with image data or error details.
     """
     image_for_prompt = process_base64_image(image)
-    response = await create_from_image(prompt, negative_prompt, guidance_scale, num_inference_steps, image_for_prompt, strength, lora_scale)
+    response = await create_from_image(guidance_scale, num_inference_steps, image_for_prompt, strength, lora_scale)
     if response[0]:
         return JSONResponse(response[0], status_code=200)
     else:
