@@ -1,4 +1,6 @@
-# CLIMT Take Home Assignment
+<p align="center">
+  <h2>CLIMT Take Home Assignment</h2>
+</p>
 
 ## Tasks:
 
@@ -16,7 +18,9 @@
 
 ---
 
-# CLIMT Image Creator
+<p align="center">
+  <h1>CLIMT Image Creator</h1>
+</p>
 
 _by Adam_
 
