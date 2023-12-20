@@ -8,6 +8,7 @@ import {
 import { CreateSDImagerops } from "../../Interfaces/interfaces";
 
 import AddLora from "../addLora/AddLora";
+import AddPrompts from "../AddPrompts/AddPrompts";
 
 function CreateSDImage({
   setImage,
@@ -36,22 +37,6 @@ function CreateSDImage({
     };
   };
 
-  const handlePromptChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPrompt(event.target.value);
-  };
-
-  const handleNegativePromptChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNegativePrompt(event.target.value);
-  };
-
-  const handleGuidanceScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setGuidanceScale(event.target.value);
-  };
-
-  const handleInferenceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNumInferenceSteps(event.target.value);
-  };
-
   const handleLoraScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setLoraScale(event.target.value);
   };
@@ -71,8 +56,6 @@ function CreateSDImage({
     formData.append("negativePrompt", negativePrompt);
     formData.append("guidanceScale", guidanceScale);
     formData.append("numInferenceSteps", numInferenceSteps);
-
-    console.log(formData.get("negativePrompt"));
 
     if (axiosURL === IMAGE_TO_IMAGE_URL && uploadedImage) {
       formData.append("strength", strength);
@@ -129,54 +112,16 @@ function CreateSDImage({
             </button>
           </div>
           <div className='promptDivContainer'>
-            <div className='promptDiv'>
-              <div>
-                <p>Write a Prompt</p>
-                <input
-                  className='TextInput'
-                  type='text'
-                  placeholder='prompt...'
-                  value={prompt}
-                  onChange={handlePromptChange}
-                />
-              </div>
-              <div>
-                <p>Write a Negative Prompt</p>
-                <input
-                  className='TextInput'
-                  type='text'
-                  placeholder='negative prompt...'
-                  value={negativePrompt}
-                  onChange={handleNegativePromptChange}
-                />
-              </div>
-              <div>
-                <p>Set guidance: {guidanceScale}</p>
-                <span>relaxed</span>
-                <input
-                  type='range'
-                  min='1'
-                  max='15'
-                  step='0.5'
-                  value={guidanceScale}
-                  onChange={handleGuidanceScaleChange}
-                />
-                <span>strict</span>
-              </div>
-              <div>
-                <p>Number of Inference Steps: {numInferenceSteps}</p>
-                <span>Fast </span>
-                <input
-                  type='range'
-                  min='5'
-                  max='50'
-                  step='1'
-                  value={numInferenceSteps}
-                  onChange={handleInferenceChange}
-                />
-                <span> Fancy</span>
-              </div>
-            </div>
+            <AddPrompts
+              setPrompt={setPrompt}
+              setNegativePrompt={setNegativePrompt}
+              setGuidanceScale={setGuidanceScale}
+              setNumInferenceSteps={setNumInferenceSteps}
+              prompt={prompt}
+              negativePrompt={negativePrompt}
+              guidanceScale={guidanceScale}
+              numInferenceSteps={numInferenceSteps}
+            />
 
             <div className='ImageDiv'>
               {axiosURL === IMAGE_TO_IMAGE_URL && (
