@@ -18,7 +18,6 @@ function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
     if (image) {
       setImageURL(image.slice(17));
     }
-    console.log(imageURL);
   }, [image]);
   return (
     <div className='CIVconainer'>

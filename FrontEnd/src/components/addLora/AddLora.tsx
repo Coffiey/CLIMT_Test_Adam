@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import "./AddlLora.css";
+import "../../index.css";
 import {
   GET_LORA_URL,
   LOAD_LORA_URL,
@@ -8,14 +9,10 @@ import {
 } from "../../Constants/Constants";
 import { Body, AddLoraProps } from "../../Interfaces/interfaces";
 
-function AddLora({
-  setLoraLoaded,
-  setLoraScale,
-  loraLoaded,
-  loraScale,
-}: AddLoraProps) {
+function AddLora({ setLoraLoaded, setLoraScale, loraScale }: AddLoraProps) {
   const [loraInput, setLoraInput] = useState<string>("");
   const [loraName, setLoraName] = useState<string>("");
+  const [loraSubbmitting, setLoraSubmitting] = useState<boolean>(false);
   const [loraTrainingWords, setLoraTrainingWords] = useState<string[]>([]);
   const [loraFileName, setLoraFileName] = useState<string | null>(null);
   const [loraImage, setLoraImage] = useState<string>("");
@@ -34,6 +31,7 @@ function AddLora({
     event.preventDefault();
     setError(false);
     try {
+      setLoraSubmitting(true);
       const url = GET_LORA_URL + loraInput;
       const response = await axios.get(url);
       const { items } = response.data;
@@ -46,10 +44,11 @@ function AddLora({
       );
       setLoraTrainingWords(wordFlatMap);
       setLoraLoaded(true);
+      setLoraSubmitting(false);
     } catch (err) {
-      setError(true);
       console.error("Error during Lora submit:", err);
-      console.log(error);
+      setLoraSubmitting(false);
+      setError(true);
     }
   };
 
@@ -69,10 +68,10 @@ function AddLora({
           headers,
           responseType: "json",
         });
-
         console.log(result.data);
       } catch (err: any) {
         console.error("Error:", err.message);
+        setError(true);
       }
     }
   };
@@ -95,75 +94,108 @@ function AddLora({
   };
 
   return (
-    <div className='LoraContainer'>
-      <div>
-        <p className='LoraTitle'>Add Lora</p>
-      </div>
-      <div>
-        <div>
-          <p>LoRA Scale: {loraScale}</p>
-          <span>Low</span>
-          <input
-            type='range'
-            min='0'
-            max='1'
-            step='0.1'
-            value={loraScale}
-            onChange={handleLoraScaleChange}
-          />
-          <span>High</span>
+    <div
+      className='LoraContainer'
+      style={{ backgroundImage: `url(${loraImage})`, backgroundSize: "cover" }}
+    >
+      <div
+        className={loraImage ? "fade" : undefined}
+        id='mimic'
+      >
+        <div className='LoraTitleDiv'>
+          <p className='LoraTitle'>{loraName ? loraName : "Add Lora"}</p>
         </div>
-        <div>
-          <div>
-            <p>
-              <a
-                href='https://civitai.com/models'
-                target='_blank'
-                rel='noopener noreferrer'
+        <div className='scaleContainer'>
+          <p className='scaleRef'>LoRA Scale: {loraScale}</p>
+          <div className='scaleDiv'>
+            <span className='scalePointLeft'>Low</span>
+            <input
+              className='scaleBar'
+              type='range'
+              min='0'
+              max='1'
+              step='0.1'
+              value={loraScale}
+              onChange={handleLoraScaleChange}
+            />
+            <span className='scalePointRight'>High</span>
+          </div>
+        </div>
+
+        {!loraImage && (
+          <>
+            <div>
+              <p className='promptText'>
+                find a Lora from civit Ai that you like type the Lora name in
+                the search bar, make sure it has the LORA tag and it is Safe for
+                work (if the name includes emoji's include them in the search)
+              </p>{" "}
+              <p className='promptHyperLink'>
+                <a
+                  href='https://civitai.com/models'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  https://civitai.com/models
+                </a>
+              </p>
+            </div>
+
+            <div className='LoraReqForm'>
+              <form
+                onSubmit={handleLoraSubmit}
+                className='theForm'
               >
-                https://civitai.com/models
-              </a>
-            </p>
-            <p>
-              find a Lora from civit Ai that you like type the Lora name in the
-              search bar,
-              <br /> make sure it has the LORA tag and it is Safe for work
-              <br /> (if the name includes emoji's include them in the search)
-            </p>
-          </div>
-          <div>
-            <form onSubmit={handleLoraSubmit}>
-              <input
-                type='text'
-                value={loraInput}
-                onChange={handleLoraInputChange}
-              />
-              <button>Search</button>
-            </form>
-          </div>
-        </div>
+                <input
+                  className='LoraReqinput'
+                  type='text'
+                  value={loraInput}
+                  onChange={handleLoraInputChange}
+                />
+                <button
+                  className='LoraSelectButton'
+                  id={error ? "SelectRed" : undefined}
+                >
+                  {loraSubbmitting ? (
+                    <img
+                      src='./media/tunyHamster.gif'
+                      className='loadingGif'
+                    />
+                  ) : (
+                    "Search"
+                  )}
+                </button>
+              </form>
+            </div>
+          </>
+        )}
         {loraImage && (
           <div>
             <div>
-              <p>Title: {loraName}</p>
-              <p>
-                Lora Prompts:{" "}
+              <p style={{ margin: "10px 0px 0px 5px", fontWeight: "bold" }}>
+                Lora Prompts:
+              </p>
+              <p className='LoraKeyPrompts'>
                 {loraTrainingWords.map((loraTrainingWord) => {
                   return <span>[{loraTrainingWord}] </span>;
                 })}
               </p>
             </div>
-            <div>
-              <img src={loraImage} />
-            </div>
-            <div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <button
+                className='buttonSpan, buttonLoraLeft'
+                id={error ? "ApplyRed" : undefined}
                 disabled={!loraFileName}
                 onClick={handleLoadLora}
               >
-                Apply Lora
+                Apply
               </button>
-              <button onClick={handleDeleteLora}>Delete Lora</button>
+              <button
+                className='buttonSpan, buttonLoraRight '
+                onClick={handleDeleteLora}
+              >
+                Delete
+              </button>
             </div>
           </div>
         )}

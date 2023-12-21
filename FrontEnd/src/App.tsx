@@ -15,6 +15,8 @@ function App() {
         setImageLoading={setImageLoading}
         setDisplayImageView={setDisplayImageView}
         displayImageView={displayImageView}
+        imageLoading={imageLoading}
+        image={image}
       />
       <CreatedImageView
         image={image}

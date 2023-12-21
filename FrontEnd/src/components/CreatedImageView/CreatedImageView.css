@@ -1,5 +1,4 @@
 .CIVconainer {
-  position: absolute;
   height: 50vh;
   min-height: 400px;
   min-width: 450px;
@@ -7,8 +6,6 @@
   background-color: rgba(157, 149, 149, 0.2);
   overflow: hidden;
   border-radius: 30px;
-  left: 60vw;
-  top: 25vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,11 +62,4 @@ button:hover {
 button:active {
   box-shadow: #422800 2px 2px 0 0;
   transform: translate(2px, 2px);
-}
-
-@media (min-width: 768px) {
-  button {
-    min-width: 100px;
-    padding: 0 25px;
-  }
 }

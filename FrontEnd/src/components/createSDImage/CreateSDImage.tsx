@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./CreateSDImage.css";
 import {
@@ -15,6 +15,8 @@ function CreateSDImage({
   setImageLoading,
   setDisplayImageView,
   displayImageView,
+  imageLoading,
+  image,
 }: CreateSDImagerops) {
   const [addLora, setAddLora] = useState<boolean>(false);
   const [loraLoaded, setLoraLoaded] = useState<boolean>(false);
@@ -68,7 +70,7 @@ function CreateSDImage({
 
   return (
     <>
-      {displayImageView ? (
+      {image ? (
         <div className='CSDContainer'>
           <button onClick={handleReset}>Generate Another Image</button>
         </div>
@@ -120,10 +122,18 @@ function CreateSDImage({
           </div>
           <div className='GenerateButtonDiv'>
             <button
+              className='GenerateButton'
               disabled={!axiosURL}
               onClick={handleGenerateAIImage}
             >
-              Generate
+              {imageLoading ? (
+                <img
+                  src='./media/tunyHamster.gif'
+                  className='loadingFinalGif'
+                />
+              ) : (
+                "Search"
+              )}
             </button>
           </div>
         </div>

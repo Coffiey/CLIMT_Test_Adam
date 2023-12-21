@@ -1,7 +1,6 @@
 .UploadContainer {
   display: flex;
   width: 100%;
-  background-color: black;
   justify-content: space-around;
   max-height: 100%;
 }

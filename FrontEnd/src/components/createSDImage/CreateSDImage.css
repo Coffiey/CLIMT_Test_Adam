@@ -1,13 +1,13 @@
 .CSDContainer {
-  position: absolute;
   background-color: rgba(173, 240, 173, 0.5);
-  width: 90vh;
-  top: 25vh;
-  left: 5vw;
-  height: 45vh;
   min-height: 450px;
   min-width: 600px;
+  max-width: 90vh;
   border-radius: 30px;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .ButtonDiv {
@@ -20,13 +20,16 @@
   flex-direction: row;
 }
 
-.LoraDiv {
-  background-color: blue;
-  padding-left: 20px;
+.GenerateButtonDiv {
+  margin: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 30%;
-  height: 80%;
-  margin-top: 0px;
+  justify-content: center;
+}
+
+.GenerateButton {
+  overflow: hidden;
+}
+
+.loadingFinalGif {
+  height: 50px;
 }

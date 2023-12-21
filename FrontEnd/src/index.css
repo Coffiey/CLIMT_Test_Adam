@@ -56,3 +56,31 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.scaleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scaleRef {
+  margin: 2px;
+}
+
+.scaleDiv {
+  display: flex;
+  justify-content: center;
+}
+.scaleBar {
+  width: 60%;
+}
+
+.scalePointLeft {
+  margin: auto 5px;
+  font-size: 0.8em;
+}
+
+.scalePointRight {
+  margin: auto 5px;
+  font-size: 0.8em;
+}

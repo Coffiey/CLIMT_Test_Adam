@@ -8,6 +8,8 @@ interface CreateSDImagerops {
   setImageLoading: (value: boolean) => void;
   setDisplayImageView: (value: boolean) => void;
   displayImageView: boolean;
+  imageLoading: boolean;
+  image: string | null;
 }
 
 interface AddPromptProps {

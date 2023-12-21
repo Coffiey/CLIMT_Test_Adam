@@ -1,9 +1,135 @@
 .LoraContainer {
-  background-color: red;
   width: 40%;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+.LoraTitleDiv {
+  display: flex;
+  justify-content: Center;
+  margin: 5px;
+  padding: 0px;
+  border-radius: 10px;
+}
+#mimic {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+.fade {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 
 .LoraTitle {
   font-size: 17;
   font-weight: bold;
+  margin: 2px;
+}
+
+.promptHyperLink {
+  margin-top: 0px;
+  text-align: center;
+}
+.promptText {
+  font-size: 0.6em;
+
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.LoraReqForm {
+  display: flex;
+  align-items: center;
+}
+
+.LoraReqinput {
+  width: 55%;
+  /* margin-left: 10px; */
+  margin: auto 5px auto 10px;
+}
+
+.theForm {
+  display: flex;
+}
+.LoraSelectButton {
+  margin-left: 10px;
+  width: 30%;
+  padding: 0px 5px;
+  height: 40px;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.loadingGif {
+  height: 50px;
+  margin: -13px -5px 0px -5px;
+}
+
+#SelectRed {
+  background-color: red;
+}
+
+#ApplyRed {
+  background-color: red;
+}
+
+.LoraImgTitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 2px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.LoraKeyPrompts {
+  margin-top: 0px;
+  margin-left: 5px;
+  font-size: 0.9em;
+}
+
+.buttonSpan {
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0px;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 70%;
+}
+
+.buttonSpan:hover {
+  background-color: #fff;
+}
+
+.buttonSpan:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+.buttonLoraLeft {
+  padding-left: 20px;
+  padding-right: 5px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+  font-size: 15px;
+  line-height: 0px;
+  margin-bottom: 20px;
+}
+.buttonLoraRight {
+  padding-right: 25px;
+  padding-left: 5px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  margin-bottom: 20px;
 }
