@@ -5,7 +5,7 @@
   top: 25vh;
   left: 5vw;
   height: 45vh;
-  min-height: 400px;
+  min-height: 450px;
   min-width: 600px;
   border-radius: 30px;
 }
@@ -20,30 +20,8 @@
   flex-direction: row;
 }
 
-.ImageDiv {
-  background-color: red;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 30%;
-  min-height: 80%;
-  margin-top: 0px;
-}
-
 .LoraDiv {
   background-color: blue;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 30%;
-  height: 80%;
-  margin-top: 0px;
-}
-
-.promptDiv {
-  /* background-color: red; */
   padding-left: 20px;
   display: flex;
   flex-direction: column;

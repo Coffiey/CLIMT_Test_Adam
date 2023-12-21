@@ -1,6 +1,6 @@
 .CIVconainer {
   position: absolute;
-  height: 45vh;
+  height: 50vh;
   min-height: 400px;
   min-width: 450px;
   width: 30vw;
@@ -16,10 +16,10 @@
 }
 
 .finalImage {
-  width: 90%;
   border-radius: 20px;
   margin: auto 2px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  max-height: 80%;
 }
 
 .FinalPlaceHolderTitle {
@@ -28,7 +28,7 @@
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   font-size: 2em;
   margin: auto 2px;
-  opacity: 0.1;
+  opacity: 0;
 }
 
 .FinalImageTitle {
@@ -69,7 +69,7 @@ button:active {
 
 @media (min-width: 768px) {
   button {
-    min-width: 120px;
+    min-width: 100px;
     padding: 0 25px;
   }
 }

@@ -23,7 +23,9 @@ function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
   return (
     <div className='CIVconainer'>
       <p className={imageURL ? "FinalImageTitle" : "FinalPlaceHolderTitle"}>
-        Your Image
+        {!imageURL && !imageLoading && ""}
+        {imageURL && "your Diffused Image"}
+        {imageLoading && "loading"}
       </p>
       {imageLoading ? (
         <img
@@ -40,7 +42,7 @@ function CreatedImageView({ image, imageLoading }: CreatedImageViewProps) {
           ) : (
             <img
               className='finalImage'
-              src='/media/placeholder-image.png'
+              src='media/turtle.gif'
             />
           )}
           {imageURL && <button onClick={handleDownload}>Download Image</button>}

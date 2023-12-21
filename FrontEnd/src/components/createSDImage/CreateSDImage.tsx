@@ -27,24 +27,6 @@ function CreateSDImage({
   const [strength, setStrength] = useState<string>("5");
   const [loraScale, setLoraScale] = useState<string>("5");
 
-  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]!;
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setUploadedImage(reader.result as string);
-    };
-  };
-
-  const handleLoraScaleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setLoraScale(event.target.value);
-  };
-
-  const handleStrengthChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setStrength(event.target.value);
-  };
-
   const handleReset = () => {
     setDisplayImageView(false);
   };
@@ -117,65 +99,26 @@ function CreateSDImage({
               setNegativePrompt={setNegativePrompt}
               setGuidanceScale={setGuidanceScale}
               setNumInferenceSteps={setNumInferenceSteps}
+              setStrength={setStrength}
+              setUploadedImage={setUploadedImage}
               prompt={prompt}
               negativePrompt={negativePrompt}
               guidanceScale={guidanceScale}
               numInferenceSteps={numInferenceSteps}
+              axiosURL={axiosURL}
+              strength={strength}
+              uploadedImage={uploadedImage}
             />
-
-            <div className='ImageDiv'>
-              {axiosURL === IMAGE_TO_IMAGE_URL && (
-                <>
-                  <div>
-                    <p>Image Strength: {strength}</p>
-                    <span>Low</span>
-                    <input
-                      type='range'
-                      min='0'
-                      max='1'
-                      step='0.1'
-                      value={strength}
-                      onChange={handleStrengthChange}
-                    />
-                    <span>High</span>
-                  </div>
-                  <div>
-                    <p>Upload an Image</p>
-                    <label>
-                      <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleImageUpload}
-                        style={{ display: "none" }}
-                      />
-                      <span>Upload</span>
-                    </label>
-                    <button onClick={() => setUploadedImage(null)}>
-                      cancel
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-            <div className='LoraDiv'>
-              {loraLoaded && (
-                <div>
-                  <p>LoRA Scale: {loraScale}</p>
-                  <span>Low</span>
-                  <input
-                    type='range'
-                    min='0'
-                    max='1'
-                    step='0.1'
-                    value={loraScale}
-                    onChange={handleLoraScaleChange}
-                  />
-                  <span>High</span>
-                </div>
-              )}
-            </div>
+            {addLora && (
+              <AddLora
+                setLoraLoaded={setLoraLoaded}
+                setLoraScale={setLoraScale}
+                loraLoaded={loraLoaded}
+                loraScale={loraScale}
+              />
+            )}
           </div>
-          <div>
+          <div className='GenerateButtonDiv'>
             <button
               disabled={!axiosURL}
               onClick={handleGenerateAIImage}
@@ -183,8 +126,6 @@ function CreateSDImage({
               Generate
             </button>
           </div>
-          {addLora && <AddLora setLoraLoaded={setLoraLoaded} />}
-          <div>{uploadedImage && <img src={uploadedImage} />}</div>
         </div>
       )}
     </>
